@@ -1,0 +1,19 @@
+.about-section{
+  margin-top: 120px;
+  margin-bottom: 150px;
+  padding: 30px;
+  text-align: center;
+  background-color: #fff;
+  color: #1a1a1a;
+}
+.about-section img{
+  height: 15%;
+  width: 15%;
+}
+.about-section h1{
+  font-size: 20px;
+}
+.about-section p{
+  margin-left: 10%;
+  margin-right: 10%;
+}

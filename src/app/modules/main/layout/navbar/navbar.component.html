@@ -1,0 +1,25 @@
+<nav>
+  <a href="#" class="logo">
+      <img src="assets/img/fav-icon.png">
+      <span>Find Movies</span>
+  </a>
+  <input type="checkbox" class="menu-btn" id="menu-btn"/>
+  <label class="menu-icon" for="menu-btn">
+      <span class="nav-icon"></span>
+  </label>
+  <ul class="menu">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]={exact:true}>Home</a></li>
+      <li><a routerLink="/movies" routerLinkActive="active">Movies</a></li>
+      <li><a routerLink="/tv-shows" routerLinkActive="active">TV Shows</a></li>
+      <li><a routerLink="/about" routerLinkActive="active">About Us</a></li>
+  </ul>
+  <div class="search">
+    <input #searchInput (keyup.enter)="searchItems()" (focusin)="emptySearchedResults()" [matAutocomplete]="auto" type="text" placeholder="Find Movies & Series">
+    <i class="fas" [ngClass]="{'fa-search': !searchingItems, 'fa-spinner fa-pulse': searchingItems}"></i>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="openDetails($event.option.value)" style="overflow-x: scroll;">
+      <mat-option *ngFor="let item of items; index as i; trackBy: trackByFn" [value]="item.object">
+        <marquee [direction]="'left'" [innerHTML]="item.title"></marquee>
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+</nav>

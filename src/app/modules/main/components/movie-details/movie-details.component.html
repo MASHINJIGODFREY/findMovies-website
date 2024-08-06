@@ -1,0 +1,87 @@
+<mat-progress-spinner *ngIf="fetchingMovieDetails" style="margin: 0 auto;" mode="indeterminate" [diameter]="30" strokeWidth="3"></mat-progress-spinner>
+<h2 mat-dialog-title *ngIf="!fetchingMovieDetails" class="mat-typography" style="word-wrap: break-word;white-space: pre-wrap;white-space: -moz-re-wrap;">
+  {{ data.title }} ({{ data.release_date | formatDate: 'Year' }})
+</h2>
+<mat-dialog-content *ngIf="!fetchingMovieDetails" class="mat-typography" style="word-wrap: break-word;white-space: pre-wrap;white-space: -moz-re-wrap;">
+  <h5 style="font-style: normal;">
+    <span style="font-weight: bold;margin-right: 8px;text-decoration: none;background-color: #fff;color: black;padding: 2px 6px 2px 6px;border: 1px solid #000;">
+      {{ movie_details.status }}
+    </span>
+    <span style="font-weight: bold;text-decoration: none;background-color: black;color: #fff;padding: 2px 6px 2px 6px;border: 1px solid #000;">
+      {{ tuhinpal_details.contentRating }}
+    </span>
+  </h5>
+  <img style="display: inline-block;max-width: 100%;height: auto;" [lazyLoad]="image.generateURL(data.poster_path)" [errorImage]="image.errorImage" [decode]="true">
+
+  <h3>{{ movie_details.genres | formatGenre }}</h3>
+  <table style="border-collapse: collapse;width: 100%;">
+    <tr>
+      <td style="text-align: left;padding: 5px;">Release Date</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ movie_details.release_date | formatDate: 'Full' }}</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;padding: 5px;">Language</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ movie_details.spoken_languages | formatLanguages }}</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;padding: 5px;">Duration</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ movie_details.runtime | duration }}</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;padding: 5px;">Country</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ movie_details.production_countries | formatCountries }}</td>
+    </tr>
+  </table>
+
+  <hr/>
+
+  <h3 style="letter-spacing: 0.2rem;font-weight: bold;">Ratings:</h3>
+  <table style="border-collapse: collapse;width: 100%;">
+    <tr>
+      <td style="text-align: left;padding: 5px;">IMDB</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ tuhinpal_details.rating?.star }}</td>
+      <td style="text-align: left;padding: 5px;">Votes(IMDB)</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ tuhinpal_details.rating?.count }}</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;padding: 5px;">TMDB</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ movie_details.vote_average }}</td>
+      <td style="text-align: left;padding: 5px;">Votes(TMDB)</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ movie_details.vote_count }}</td>
+    </tr>
+  </table>
+
+  <hr/>
+
+  <h3 style="letter-spacing: 0.2rem;font-weight: bold;">Plot:</h3>
+  <p>{{ data.overview }}</p>
+  <hr/>
+
+  <h3 style="letter-spacing: 0.2rem;font-weight: bold;">Crew:</h3>
+  <table style="border-collapse: collapse;width: 100%;">
+    <tr>
+      <td style="text-align: left;padding: 5px;">Director</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ tuhinpal_details.directors | stringfyArray }}</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;padding: 5px;">Starring</td>
+      <td style="text-align: left;padding: 5px;word-wrap: break-word;">: {{ tuhinpal_details.actors | stringfyArray }}</td>
+    </tr>
+  </table>
+
+  <hr *ngIf="movieTrailerFound"/>
+
+  <h3 style="letter-spacing: 0.2rem;font-weight: bold;" *ngIf="movieTrailerFound">Official Trailer:</h3>
+  <div style="position: relative;padding-top: 25px;padding-bottom: 56.25%;height: 0;" *ngIf="movieTrailerFound">
+    <iframe width="560" height="315" [src]="movie_trailer_URL | safe" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;" *ngIf="movieTrailerFound" allowfullscreen></iframe>
+  </div>
+  <hr/>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="!fetchingMovieDetails" align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="getTorrents(data.title)" [disabled]="fetchingTorrents || loadingTorrents || torrentsDisabled" cdkFocusInitial>
+    <span class="fa fa-magnet" *ngIf="!fetchingTorrents && !loadingTorrents"> Torrents</span>
+    <span *ngIf="fetchingTorrents && !loadingTorrents">Fetching...</span>
+    <span *ngIf="loadingTorrents && !fetchingTorrents">Loading...</span>
+  </button>
+</mat-dialog-actions>

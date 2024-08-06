@@ -1,0 +1,7 @@
+<div class="categories" style="padding-top: 80px;">
+  <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]={exact:true} title="All Movies">All</a>
+  <a routerLink="/movies/upcoming" routerLinkActive="active" title="Upcoming Movies">Upcoming</a>
+  <a routerLink="/movies/top-rated" routerLinkActive="active" title="Top Rated Movies">Top Rated</a>
+</div>
+
+<router-outlet></router-outlet>

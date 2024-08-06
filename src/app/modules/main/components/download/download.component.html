@@ -1,0 +1,11 @@
+<div *ngIf="!loading">
+  <h3>Torrent Information</h3>
+  <p>infoHash: {{ infoHash }}</p>
+  <p>Name: {{ name }}</p>
+  <p>{{ progress }}</p>
+  <p id="download-portal"></p>
+</div>
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5" appearance="line"></ngx-skeleton-loader>
+</div>
+<button mat-stroked-button (click)="close()">Close</button>

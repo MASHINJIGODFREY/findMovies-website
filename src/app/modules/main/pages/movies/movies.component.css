@@ -1,0 +1,25 @@
+.categories{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.categories a{
+  width: 130px;
+  height: 40px;
+  border:none;
+  outline: none;
+  color: #585858;
+  background-color: #ffffff;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+.categories a.active{
+  color: #ffffff;
+  background-color: #284fd1;
+}
+.categories a:hover{
+  border: 1px solid #284fd1;
+}

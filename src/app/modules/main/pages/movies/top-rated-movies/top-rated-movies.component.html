@@ -1,0 +1,18 @@
+<section id="movies-list" c *ngIf="foundMovies()">
+  <div *ngFor="let item of movies.results; index as i; trackBy: trackByFn" class="movies-box" (click)="openMovieDetails(item)">
+    <div class="movies-img">
+      <div class="quality">{{ item.release_date | formatDate: 'Year' }}</div>
+      <img [lazyLoad]="image.generateURL(item.poster_path)" [errorImage]="image.errorImage" [decode]="true">
+    </div>
+    <a style="cursor: pointer;text-align: center;">{{ item.title }}</a>
+  </div>
+</section>
+<div class="btns" *ngIf="foundMovies()">
+  <a (click)="goToPreviousPage()" *ngIf="movies.page > 1" title="Previous Page">
+    <i class="fas fa-angle-left"></i>
+  </a>
+  <span class="page">{{ movies.page }}/{{ movies.total_pages }}</span>
+  <a (click)="goToNextPage()" *ngIf="movies.page < movies.total_pages" title="Next Page">
+    <i class="fas fa-angle-right"></i>
+  </a>
+</div>

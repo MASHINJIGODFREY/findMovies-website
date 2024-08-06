@@ -1,0 +1,2 @@
+About
+An Angular 10 web application for searching and downloading movies online
