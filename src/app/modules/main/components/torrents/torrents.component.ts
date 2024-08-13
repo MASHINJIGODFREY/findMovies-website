@@ -30,7 +30,9 @@ export class TorrentsComponent implements OnInit, OnDestroy {
     {name: 'DIGITAL DISTRIBUTION COPY', acronym: 'DDC', quality: 'Good'},
     {name: 'TELECINE', acronym: 'TC', quality: 'Poor'},
     {name: 'DVD-SCREENER', acronym: 'DVDscr', quality: 'Poor'},
+    {name: 'TELESYNC-Rip', acronym: 'TSRip', quality: 'Poor'},
     {name: 'TELESYNC', acronym: 'TS', quality: 'Poor'},
+    {name: 'HDCAM', acronym: 'HDCAM', quality: 'Poor'},
     {name: 'CAMCORDER-Rip', acronym: 'CAMRip', quality: 'Very Poor'},
     {name: 'CAMCORDER', acronym: 'CAM', quality: 'Very Poor'},
     {name: 'SCREENER', acronym: 'SCR', quality: 'Very Poor'},
@@ -42,9 +44,10 @@ export class TorrentsComponent implements OnInit, OnDestroy {
     this.ui.showSpinner();
     this.release_format_types.forEach((format_type, index, arr) => {
       let indices = new Array();
-      let regex = new RegExp(`[\\s|\\.|\\_|\\-|\\[]${format_type.acronym}[\\s|\\.|\\_|\\-|\\]]`, 'i');
+      let regex1 = new RegExp(`[\\s|\\.|\\_|\\-|\\[]${format_type.acronym}[\\s|\\.|\\_|\\-|\\]]`, 'i');
+      let regex2 = new RegExp(`[\\s|\\.|\\_|\\-|\\[]${format_type.name}[\\s|\\.|\\_|\\-|\\]]`, 'i');
       let files = this.data.filter((torr, indx, arry) => {
-        if((regex.test(torr.name.toString()) === true) || (regex.test(torr.url.toString()) === true)){
+        if((regex1.test(torr.name.toString()) === true) || (regex1.test(torr.url.toString()) === true) || (regex2.test(torr.name.toString()) === true) || (regex2.test(torr.url.toString()) === true)){
           indices.push(indx);
           return true;
         }else{
@@ -73,7 +76,7 @@ export class TorrentsComponent implements OnInit, OnDestroy {
       this.torrents.push({
           release_format_type: 'Oblivious',
           files: this.data,
-          quality: 'Unknown Quality',
+          quality: 'Unknown',
           enphasis: this.generateColorCode("Unrecognized")
       });
     }
@@ -119,17 +122,17 @@ export class TorrentsComponent implements OnInit, OnDestroy {
     if(num > 0){
       return `${count}`;
     }else{
-      return 'unknown';
+      return 'N/A';
     }
   }
 
   public determineResolution(filename: string): string{
-    let regex5760p = new RegExp(`[\\s|\\.|\\_|\\-|\\[]5760p[\\s|\\.|\\_|\\-|\\]]`, 'i');
-    let regex4320p = new RegExp(`[\\s|\\.|\\_|\\-|\\[]4320p[\\s|\\.|\\_|\\-|\\]]`, 'i');
-    let regex2160p = new RegExp(`[\\s|\\.|\\_|\\-|\\[]2160p[\\s|\\.|\\_|\\-|\\]]`, 'i');
-    let regex1200p = new RegExp(`[\\s|\\.|\\_|\\-|\\[]1200p[\\s|\\.|\\_|\\-|\\]]`, 'i');
-    let regex1080p = new RegExp(`[\\s|\\.|\\_|\\-|\\[]1080p[\\s|\\.|\\_|\\-|\\]]`, 'i');
-    let regex720p = new RegExp(`[\\s|\\.|\\_|\\-|\\[]720p[\\s|\\.|\\_|\\-|\\]]`, 'i');
+    let regex5760p = new RegExp(`[\\s\\(\\[\\]\\.,]*5760p[\\s\\(\\[\\]\\.,]*`, 'i');
+    let regex4320p = new RegExp(`[\\s\\(\\[\\]\\.,]*4320p[\\s\\(\\[\\]\\.,]*`, 'i');
+    let regex2160p = new RegExp(`[\\s\\(\\[\\]\\.,]*2160p[\\s\\(\\[\\]\\.,]*`, 'i');
+    let regex1200p = new RegExp(`[\\s\\(\\[\\]\\.,]*1200p[\\s\\(\\[\\]\\.,]*`, 'i');
+    let regex1080p = new RegExp(`[\\s\\(\\[\\]\\.,]*1080p[\\s\\(\\[\\]\\.,]*`, 'i');
+    let regex720p = new RegExp(`[\\s\\(\\[\\]\\.,]*720p[\\s\\(\\[\\]\\.,]*`, 'i');
     if(regex5760p.test(filename.toString()) === true){
       return "5760p";
     }else if(regex4320p.test(filename.toString()) === true){
@@ -143,7 +146,7 @@ export class TorrentsComponent implements OnInit, OnDestroy {
     }else if(regex720p.test(filename.toString()) === true){
       return "720p";
     }else{
-      return "unknown";
+      return "N/A";
     }
   }
 

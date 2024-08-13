@@ -112,10 +112,10 @@ export class MovieDetailsComponent implements OnInit, OnDestroy {
     var needleSize = needleArr.length;
     var expression = '';
     if (needleSize > 1) {
-      expression = needleArr.join('[\\s|\\.|\\-]');
-      expression += `([\\s|\\.]?\\(|[\\s|\\.])${year}(\\)?[\\s|\\.]?)`;
+      expression = needleArr.join('[\\s:\\.\\-\\&]*');
+      expression += `[\\s:\\.\\-\\&]*\\(?${year}\\)?[\\s:\\.\\-\\&]*`;
     }else{
-      expression = needle + `([\\s|\\.]?\\(|[\\s|\\.])${year}(\\)?[\\s|\\.]?)`;
+      expression = needle + `[\\s:\\.\\-\\&]*\\(?${year}\\)?[\\s:\\.\\-\\&]*`;
     }
     return new RegExp(expression, 'i');
   }
