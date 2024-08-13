@@ -12,13 +12,13 @@ export class OmdbService {
   constructor(private http: HttpClient) { }
 
   public search(title: string): Observable<{Search: Array<OMDB>}>{
-    let params = new HttpParams().set("apikey", environment.api.omdb.key).set("s", title);
+    let params = new HttpParams().set("apikey", environment.api.omdb.key).set("s", title).set("plot", "full").set("r", "json").set("v", "1");
     return this.http.get<{Search: Array<OMDB>}>(`${environment.api.omdb.url}/`, { params: params });
   }
 
   public details(imdb_ID: string | null): Observable<OMDB>{
     let imdbID = `${imdb_ID}`;
-    let params = new HttpParams().set("apikey", environment.api.omdb.key).set("i", imdbID);
+    let params = new HttpParams().set("apikey", environment.api.omdb.key).set("i", imdbID).set("plot", "full").set("r", "json").set("v", "1");
     return this.http.get<OMDB>(`${environment.api.omdb.url}/`, { params: params });
   }
 }

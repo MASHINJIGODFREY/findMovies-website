@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CacheBucket, HttpCacheManager, withCache } from '@ngneat/cashew';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Torrent } from '../models';
+import { Torrents } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,10 @@ export class TorrentService {
 
   constructor(private http: HttpClient, private manager: HttpCacheManager) { }
 
-  public fetch(title: string): Observable<Array<Torrent[]>>{
-    const url = `${this.baseURL}/${title}`;
-    return this.http.get<Array<Torrent[]>>(`${url}`, { context: withCache({ cache: true, ttl: 432000000, version: 'v0.0.1', key: `${url}`, bucket: this.torrentBucket }) });
+  public fetch(title: string): Observable<Torrents>{
+    let params = new HttpParams().set("query", `${title}`).set("limit", "8");
+    const url = `${this.baseURL}/search`;
+    return this.http.get<Torrents>(`${url}`, { params: params, context: withCache({ cache: true, ttl: 432000000, version: 'v0.0.3', key: `${url}`, bucket: this.torrentBucket }) });
   }
 
   public isTorrentResponseSaved(titleParam: string): boolean{

@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 })
 export class FooterComponent implements OnInit {
   public version: string = environment.version;
+  public copyright: string = environment.copyright;
+  public github: string = environment.github;
 
   constructor(private dialog: MatDialog) { }
 

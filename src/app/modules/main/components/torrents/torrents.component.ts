@@ -17,21 +17,23 @@ export class TorrentsComponent implements OnInit, OnDestroy {
   public torrents: Array<{ release_format_type: string; files: Array<Torrent>; quality: string; enphasis: string; }> = new Array();
   private release_format_types = [
     {name: 'Blu-Ray', acronym: 'BluRay', quality: 'Excellent'},
-    {name: 'WEBRip', acronym: 'WEBRip', quality: 'Excellent'},
-    {name: 'DVDRip', acronym: 'DVDRip', quality: 'Excellent'},
-    {name: 'WEB-DL', acronym: 'WEB-DL', quality: 'Excellent'},
-    {name: 'HIGH DEFINITION TELEVISION', acronym: 'HDTV', quality: 'Very Good'},
-    {name: 'HIGH DEFINITION TELECINE', acronym: 'HDTC', quality: 'Very Good'},
-    {name: 'HDRip', acronym: 'HDRip', quality: 'Very Good'},
+    {name: 'WEB-DOWNLOAD', acronym: 'WEB-DL', quality: 'Excellent'},
+    {name: 'HIGH DYNAMIC RANGE: DOLBY VISION', acronym: 'HDR DV', quality: 'Very Good'},
     {name: 'Blu-Ray Rip', acronym: 'BrRip', quality: 'Very Good'},
-    {name: 'WEB', acronym: 'WEB', quality: 'Very Good'},
+    {name: 'WEBRip', acronym: 'WEBRip', quality: 'Very Good'},
+    {name: 'WEB', acronym: 'WEB', quality: 'Good'},
+    {name: 'DVDRip', acronym: 'DVDRip', quality: 'Good'},
+    {name: 'HDRip', acronym: 'HDRip', quality: 'Good'},
+    {name: 'HIGH DEFINITION TELEVISION', acronym: 'HDTV', quality: 'Good'},
+    {name: 'HIGH DEFINITION TELECINE', acronym: 'HDTC', quality: 'Good'},
     {name: 'HIGH DEFINITION TELESYNC', acronym: 'HDTS', quality: 'Good'},
     {name: 'DIGITAL DISTRIBUTION COPY', acronym: 'DDC', quality: 'Good'},
-    {name: 'TELECINE', acronym: 'TC', quality: 'Good'},
+    {name: 'TELECINE', acronym: 'TC', quality: 'Poor'},
     {name: 'DVD-SCREENER', acronym: 'DVDscr', quality: 'Poor'},
     {name: 'TELESYNC', acronym: 'TS', quality: 'Poor'},
+    {name: 'CAMCORDER-Rip', acronym: 'CAMRip', quality: 'Very Poor'},
+    {name: 'CAMCORDER', acronym: 'CAM', quality: 'Very Poor'},
     {name: 'SCREENER', acronym: 'SCR', quality: 'Very Poor'},
-    {name: 'CAMRip', acronym: 'CAMRip', quality: 'Very Poor'},
   ];
 
   constructor(private ui: UiService, private dialog: MatDialog, private snackBar: MatSnackBar, private bottomSheetRef: MatBottomSheetRef<TorrentsComponent>, private clipboardService: ClipboardService, @Optional() @Inject(MAT_BOTTOM_SHEET_DATA) public data: Array<Torrent>) { }
@@ -42,7 +44,7 @@ export class TorrentsComponent implements OnInit, OnDestroy {
       let indices = new Array();
       let regex = new RegExp(`[\\s|\\.|\\_|\\-|\\[]${format_type.acronym}[\\s|\\.|\\_|\\-|\\]]`, 'i');
       let files = this.data.filter((torr, indx, arry) => {
-        if((regex.test(torr.Name.toString()) === true) || (regex.test(torr.Url.toString()) === true)){
+        if((regex.test(torr.name.toString()) === true) || (regex.test(torr.url.toString()) === true)){
           indices.push(indx);
           return true;
         }else{
@@ -81,9 +83,9 @@ export class TorrentsComponent implements OnInit, OnDestroy {
 
   private generateColorCode(quality: string): string{
     let colors = [
-      {qty: 'Excellent', code: '#008000'},
-      {qty: 'Very Good', code: '#ADFF2F'},
-      {qty: 'Good', code: '#FFFF00'},
+      {qty: 'Excellent', code: '#00FF00'},
+      {qty: 'Very Good', code: '#90EE90'},
+      {qty: 'Good', code: '#9ACD32'},
       {qty: 'Poor', code: '#FFA500'},
       {qty: 'Very Poor', code: '#FF0000'},
       {qty: 'Unrecognized', code: '#808080'}
@@ -93,10 +95,10 @@ export class TorrentsComponent implements OnInit, OnDestroy {
   }
 
   public copy(file: Torrent): void{
-    if(typeof file.Magnet !== "undefined" && file.Magnet !== null && file.Magnet !== ""){
-      return this.clipboardService.copy(file.Magnet);
-    }else if(typeof file.Torrent !== "undefined" && file.Torrent !== null && file.Torrent !== ""){
-      return this.clipboardService.copy(file.Torrent);
+    if(typeof file.magnet !== "undefined" && file.magnet !== null && file.magnet !== ""){
+      return this.clipboardService.copy(file.magnet);
+    }else if(typeof file.torrent !== "undefined" && file.torrent !== null && file.torrent !== ""){
+      return this.clipboardService.copy(file.torrent);
     }else{
       this.snackBar.open("Unable to access Torrent link!", "Ok", { duration: 3000 });
     }

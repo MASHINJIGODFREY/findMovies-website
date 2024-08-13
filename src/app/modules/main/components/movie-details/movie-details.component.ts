@@ -1,6 +1,6 @@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Movie, MovieDetails, OMDB, Torrent, Tuhinpal, Videos } from 'src/app/models';
+import { Movie, MovieDetails, OMDB, Torrent, Torrents, Tuhinpal, Videos } from 'src/app/models';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { ImgService, MovieService, OmdbService, TorrentService, TuhinpalService } from 'src/app/services';
 import { catchError, finalize, switchMap, takeUntil, timeout } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class MovieDetailsComponent implements OnInit, OnDestroy {
   public torrents: Array<Torrent> = new Array();
   public torrentsDisabled: boolean = true;
   public movie_details: MovieDetails = new MovieDetails();
-  public tuhinpal_details: Tuhinpal = new Tuhinpal();
+  public OMDB_details: OMDB = new OMDB();
   public movie_trailer_URL: string = "";
   public movieTrailerFound: boolean = false;
 
@@ -34,16 +34,15 @@ export class MovieDetailsComponent implements OnInit, OnDestroy {
     this.fetchingMovieDetails = true;
     combineLatest([
       this.movie.details(this.data.id),
-      this.movie.details(this.data.id).pipe(switchMap((details) => this.tuhinpal.item(`${details.imdb_id}`))),
       this.movie.details(this.data.id).pipe(switchMap((details) => this.omdb.details(`${details.imdb_id}`))),
       this.movie.videos(this.data.id)
     ])
     .pipe(takeUntil(this._destroyed$), finalize(() => { this.fetchingMovieDetails = false; }))
     .subscribe({
-      next: (response: [MovieDetails, Tuhinpal, OMDB, Videos]) => {
+      next: (response: [MovieDetails, OMDB, Videos]) => {
         this.movie_details = response[0];
-        this.tuhinpal_details = response[1];
-        this.processMovieVideos(response[3]);
+        this.OMDB_details = response[1];
+        this.processMovieVideos(response[2]);
         (response[0].status.toString() === "Released") ? this.torrentsDisabled = false : this.torrentsDisabled = true;
       },
       error: (error: any) => {
@@ -59,20 +58,18 @@ export class MovieDetailsComponent implements OnInit, OnDestroy {
     this.fetchingTorrents = true;
     this.loadingTorrents = false;
     this.torrentClient.fetch(title)
-    .pipe(timeout(120000), catchError(error => of(`Request timeout`)), takeUntil(this._destroyed$), finalize(() => { this.fetchingTorrents = false; }))
+    .pipe(takeUntil(this._destroyed$), finalize(() => { this.fetchingTorrents = false; }))
     .subscribe({
-      next: (results: string | Array<Array<Torrent>>) => {
+      next: (results: string | Torrents) => {
         if(typeof results !== "string"){
           this.fetchingTorrents = false;
           this.loadingTorrents = true;
-          results.forEach((result, i, data) => {
-            result.forEach((value, index, array) => {
-              this.torrents.push(value);
-            });
+          results.data.forEach((value, index, array) => {
+            this.torrents.push(value);
           });
           const regex = this.generateMovieTorrentRegExp(title, this.data.release_date);
-          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.Name.toString()));
-          this.torrents = this.torrents.sort((a, b) => parseInt(b.Seeders) - parseInt(a.Seeders));
+          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.name.toString()));
+          this.torrents = this.torrents.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
           this.torrents = this.torrents.slice(0, 40);
           this.loadingTorrents = false;
           if (this.torrents.length < 1) {

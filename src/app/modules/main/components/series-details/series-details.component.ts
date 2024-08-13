@@ -7,7 +7,7 @@ import { combineLatest, of, Subject } from 'rxjs';
 import { catchError, finalize, switchMap, takeUntil, timeout } from 'rxjs/operators';
 import { fadeIn } from 'src/app/animations';
 import { ScrollGovernor } from 'src/app/factories/scroll-governor';
-import { Episode, Season, Series, SeriesDetails, Torrent, Tuhinpal, Videos } from 'src/app/models';
+import { Episode, Season, Series, SeriesDetails, Torrent, OMDB, Tuhinpal, Videos, Torrents } from 'src/app/models';
 import { ImgService, OmdbService, SeriesService, TorrentService, TuhinpalService } from 'src/app/services';
 import { TorrentsComponent } from '../torrents/torrents.component';
 
@@ -29,27 +29,27 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
   public torrentsFound: boolean = false;
   public tvshow_details: SeriesDetails = new SeriesDetails();
   public tvseasons_details: Array<Season> = new Array();
-  public tuhinpal_details: Tuhinpal = new Tuhinpal();
+  public OMDB_details: OMDB = new OMDB();
   public season_trailer_URL: string = "";
   public seasonTrailerFound: boolean = false;
 
   @ViewChild(MatAccordion) accordion: MatAccordion = new MatAccordion;
   @ViewChild('scrollTargetElement') private seasonsScrollContainer!: ElementRef<HTMLElement>;
 
-  constructor(private dialogRef: MatDialogRef<SeriesDetailsComponent>, private tv: SeriesService, private torrentClient: TorrentService, private tuhinpal: TuhinpalService, public  image: ImgService, private snackBar: MatSnackBar, private bottomSheet: MatBottomSheet, @Inject(MAT_DIALOG_DATA) public data: Series) { }
+  constructor(private dialogRef: MatDialogRef<SeriesDetailsComponent>, private tv: SeriesService, private torrentClient: TorrentService, private omdb: OmdbService, private tuhinpal: TuhinpalService, public  image: ImgService, private snackBar: MatSnackBar, private bottomSheet: MatBottomSheet, @Inject(MAT_DIALOG_DATA) public data: Series) { }
 
   ngOnInit(): void {
     this.fetchingTVShowDetails = true;
     combineLatest([
       this.tv.details(this.data.id),
-      this.tv.external_ids(this.data.id).pipe(switchMap((external_ids) => this.tuhinpal.item(external_ids.imdb_id)))
+      this.tv.external_ids(this.data.id).pipe(switchMap((external_ids) => this.omdb.details(external_ids.imdb_id)))
     ])
     .pipe(takeUntil(this._destroyed$), finalize(() => { this.fetchingTVShowDetails = false; }))
     .subscribe({
-      next: (response: [SeriesDetails, Tuhinpal]) => {
+      next: (response: [SeriesDetails, OMDB]) => {
         this.tvshow_details = response[0];
         if(this.tvshow_details.seasons.some((season, index, arr) => season.season_number === 0)) this.tvshow_details.seasons.splice(0,1);
-        this.tuhinpal_details = response[1];
+        this.OMDB_details = response[1];
         this.tvseasons_details = new Array<Season>(this.tvshow_details.number_of_seasons);
         (response[0].status.toString() === "Returning Series" || response[0].status.toString() === "Ended") ? this.torrentsDisabled = false : this.torrentsDisabled = true;
       },
@@ -81,19 +81,17 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
     this.fetchingTorrents = true;
     this.loadingTorrents = false;
     this.torrentClient.fetch(title)
-    .pipe(timeout(120000), catchError(error => of(`Request timeout`)), takeUntil(this._destroyed$), finalize(() => { this.fetchingTorrents = false; }))
+    .pipe(takeUntil(this._destroyed$), finalize(() => { this.fetchingTorrents = false; }))
     .subscribe({
-      next: (results: string | Array<Array<Torrent>>) => {
+      next: (results: string | Torrents) => {
         if(typeof results !== "string"){
           this.fetchingTorrents = false;
           this.loadingTorrents = true;
-          results.forEach((result, i, data) => {
-            result.forEach((value, index, array) => {
-              this.torrents.push(value);
-            });
+          results.data.forEach((value, index, array) => {
+            this.torrents.push(value);
           });
           const regex = this.generateTVTorrentRegExp(title);
-          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.Name.toString()));
+          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.name.toString()));
           this.loadingTorrents = false;
           if(this.torrents.length < 1){
             this.accordion.closeAll();
@@ -132,8 +130,8 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
     let index2 = `Season ${season_number}`;
     let regExp1 = new RegExp(`[\\s|\\.]${index1}[\\s|\\.]`, 'i');
     let regExp2 = new RegExp(`[\\s|\\.]${index2}[\\s|\\.]`, 'i');
-    let seasons = this.torrents.filter((value, index, arr) => (regExp1.test(value.Name.toString()) || regExp2.test(value.Name.toString())));
-    seasons = seasons.sort((a, b) => parseInt(b.Seeders) - parseInt(a.Seeders));
+    let seasons = this.torrents.filter((value, index, arr) => (regExp1.test(value.name.toString()) || regExp2.test(value.name.toString())));
+    seasons = seasons.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
     if(seasons.length > 0){
       this.openTorrents(seasons).afterDismissed().subscribe(response => this.bottomSheetDismissHandler(response));
     }else{
@@ -144,8 +142,8 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
   public viewEpisodeTorrents(season_number: number, episode_number: number): void{
     let index = this.createEpisodeIndex(season_number, episode_number);
     let regExp = new RegExp(`[\\s|\\.]${index}[\\s|\\.]`, 'i');
-    let episodes = this.torrents.filter((value, index, arr) => regExp.test(value.Name.toString()));
-    episodes = episodes.sort((a, b) => parseInt(b.Seeders) - parseInt(a.Seeders));
+    let episodes = this.torrents.filter((value, index, arr) => regExp.test(value.name.toString()));
+    episodes = episodes.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
     if(episodes.length > 0){
       this.openTorrents(episodes).afterDismissed().subscribe(response => this.bottomSheetDismissHandler(response));
     }else{

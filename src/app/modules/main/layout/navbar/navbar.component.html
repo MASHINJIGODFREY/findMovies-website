@@ -14,8 +14,8 @@
       <li><a routerLink="/about" routerLinkActive="active">About Us</a></li>
   </ul>
   <div class="search">
-    <input #searchInput (keyup.enter)="searchItems()" (focusin)="emptySearchedResults()" [matAutocomplete]="auto" type="text" placeholder="Find Movies & Series">
-    <i class="fas" [ngClass]="{'fa-search': !searchingItems, 'fa-spinner fa-pulse': searchingItems}"></i>
+    <input #searchInput (keyup.enter)="searchItems()" (focusin)="emptySearchedResults()" [matAutocomplete]="auto" type="text" placeholder="Search Movies & Series">
+    <i class="fas" (click)="searchItems()" [ngClass]="{'fa-search': !searchingItems, 'fa-spinner fa-pulse': searchingItems}"></i>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="openDetails($event.option.value)" style="overflow-x: scroll;">
       <mat-option *ngFor="let item of items; index as i; trackBy: trackByFn" [value]="item.object">
         <marquee [direction]="'left'" [innerHTML]="item.title"></marquee>

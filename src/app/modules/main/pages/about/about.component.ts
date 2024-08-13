@@ -10,6 +10,10 @@ import { fadeIn } from 'src/app/animations';
 })
 export class AboutComponent implements OnInit {
   public version: string = environment.version;
+  public github: string = environment.github;
+  public tmdb: string = environment.api.tmdb.site;
+  public omdb: string = environment.api.omdb.site;
+  public torrent: string = environment.api.torrent.github;
 
   constructor() { }
 
