@@ -14,8 +14,8 @@ export class TorrentService {
 
   constructor(private http: HttpClient, private manager: HttpCacheManager) { }
 
-  public fetch(title: string): Observable<Torrents>{
-    let params = new HttpParams().set("query", `${title}`).set("limit", "8");
+  public fetch(title: string, limit: number = 8): Observable<Torrents>{
+    let params = new HttpParams().set("query", `${title}`).set("limit", limit);
     const url = `${this.baseURL}/search`;
     return this.http.get<Torrents>(`${url}`, { params: params, context: withCache({ cache: true, ttl: 432000000, version: 'v0.0.4', key: `${title}`, bucket: this.torrentBucket, clearCachePredicate: requestDataChanged }) });
   }

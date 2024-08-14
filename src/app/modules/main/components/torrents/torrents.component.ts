@@ -19,15 +19,16 @@ export class TorrentsComponent implements OnInit, OnDestroy {
     {name: 'Blu-Ray', acronym: 'BluRay', quality: 'Excellent'},
     {name: 'WEB-DOWNLOAD', acronym: 'WEB-DL', quality: 'Excellent'},
     {name: 'HIGH DYNAMIC RANGE: DOLBY VISION', acronym: 'HDR DV', quality: 'Very Good'},
-    {name: 'Blu-Ray Rip', acronym: 'BrRip', quality: 'Very Good'},
     {name: 'WEBRip', acronym: 'WEBRip', quality: 'Very Good'},
+    {name: 'Blu-Ray Rip', acronym: 'BrRip', quality: 'Very Good'},
+    {name: 'Blu-Ray Disc Rip', acronym: 'BDRip', quality: 'Good'},
     {name: 'WEB', acronym: 'WEB', quality: 'Good'},
     {name: 'DVDRip', acronym: 'DVDRip', quality: 'Good'},
     {name: 'HDRip', acronym: 'HDRip', quality: 'Good'},
-    {name: 'HIGH DEFINITION TELEVISION', acronym: 'HDTV', quality: 'Good'},
-    {name: 'HIGH DEFINITION TELECINE', acronym: 'HDTC', quality: 'Good'},
-    {name: 'HIGH DEFINITION TELESYNC', acronym: 'HDTS', quality: 'Good'},
-    {name: 'DIGITAL DISTRIBUTION COPY', acronym: 'DDC', quality: 'Good'},
+    {name: 'HIGH DEFINITION TELEVISION', acronym: 'HDTV', quality: 'Fair'},
+    {name: 'HIGH DEFINITION TELECINE', acronym: 'HDTC', quality: 'Fair'},
+    {name: 'HIGH DEFINITION TELESYNC', acronym: 'HDTS', quality: 'Fair'},
+    {name: 'DIGITAL DISTRIBUTION COPY', acronym: 'DDC', quality: 'Fair'},
     {name: 'TELECINE', acronym: 'TC', quality: 'Poor'},
     {name: 'DVD-SCREENER', acronym: 'DVDscr', quality: 'Poor'},
     {name: 'TELESYNC-Rip', acronym: 'TSRip', quality: 'Poor'},
@@ -44,8 +45,8 @@ export class TorrentsComponent implements OnInit, OnDestroy {
     this.ui.showSpinner();
     this.release_format_types.forEach((format_type, index, arr) => {
       let indices = new Array();
-      let regex1 = new RegExp(`[\\s|\\.|\\_|\\-|\\[]${format_type.acronym}[\\s|\\.|\\_|\\-|\\]]`, 'i');
-      let regex2 = new RegExp(`[\\s|\\.|\\_|\\-|\\[]${format_type.name}[\\s|\\.|\\_|\\-|\\]]`, 'i');
+      let regex1 = new RegExp(`[\\s\\(\\[\\]\\.,]*${format_type.acronym}[\\s\\(\\[\\]\\.,]*`, 'i');
+      let regex2 = new RegExp(`[\\s\\(\\[\\]\\.,]*${format_type.name}[\\s\\(\\[\\]\\.,]*`, 'i');
       let files = this.data.filter((torr, indx, arry) => {
         if((regex1.test(torr.name.toString()) === true) || (regex1.test(torr.url.toString()) === true) || (regex2.test(torr.name.toString()) === true) || (regex2.test(torr.url.toString()) === true)){
           indices.push(indx);
@@ -86,12 +87,13 @@ export class TorrentsComponent implements OnInit, OnDestroy {
 
   private generateColorCode(quality: string): string{
     let colors = [
-      {qty: 'Excellent', code: '#00FF00'},
-      {qty: 'Very Good', code: '#90EE90'},
-      {qty: 'Good', code: '#9ACD32'},
-      {qty: 'Poor', code: '#FFA500'},
-      {qty: 'Very Poor', code: '#FF0000'},
-      {qty: 'Unrecognized', code: '#808080'}
+      {qty: 'Excellent', code: '#006400', name: 'Dark Green'},
+      {qty: 'Very Good', code: '#008000', name: 'Green'},
+      {qty: 'Good', code: '#3CB371', name: 'Medium Sea Green'},
+      {qty: 'Fair', code: '#6B8E23', name: 'Olive Drab'},
+      {qty: 'Poor', code: '#FFA500', name: 'Orange'},
+      {qty: 'Very Poor', code: '#FF0000', name: 'Red'},
+      {qty: 'Unrecognized', code: '#808080', name: 'Grey'}
     ];
     let match = colors.filter((color, index, arr) => color.qty === quality);
     return match[0].code;

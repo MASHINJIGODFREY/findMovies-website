@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MaterialModule } from '../shared/material.module';
 import { ImgService, MovieService, NavigationService, OmdbService, SearchService, SeriesService, TorrentService, TuhinpalService, UiService } from 'src/app/services';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { ImgService, MovieService, NavigationService, OmdbService, SearchService
     LazyLoadImageModule,
     MainRoutingModule,
     MaterialModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
   ],
   providers: [
     ImgService,

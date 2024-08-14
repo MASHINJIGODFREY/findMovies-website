@@ -1,11 +1,12 @@
 import { ApplicationRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Observable, Subject, Subscription, switchMap, take, takeUntil } from 'rxjs';
 import { OpenDialogComponent } from 'src/app/factories/dialog-opener';
 import { SearchedMovie, SearchedPerson, SearchedTVShow, SearchResults } from 'src/app/models';
 import { SearchService } from 'src/app/services';
 import { MovieDetailsComponent, SeriesDetailsComponent } from '../../components';
+import { FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
@@ -16,20 +17,19 @@ export class NavbarComponent implements OnInit {
   private _destroyed$: Subject<boolean> = new Subject();
   public items: Array<{ title: string; object: SearchedMovie & SearchedTVShow & SearchedPerson }> = new Array();
   public searchingItems: boolean = false;
+  public searchField: FormControl = new FormControl('');
+  private searchFieldObserver!: Subscription;
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private dialog: MatDialog, private applicationRef: ApplicationRef, private search: SearchService, private snackBar: MatSnackBar) { }
+  constructor(private fb: FormBuilder, private dialog: MatDialog, private applicationRef: ApplicationRef, private search: SearchService, private snackBar: MatSnackBar) { }
 
-  ngOnInit(): void {}
-
-  public searchItems(): void{
-    this.emptySearchedResults();
-    this.searchingItems = true;
-    this.applicationRef.tick();
-    this.search.search_multi(this.searchInput.nativeElement.value)
-    .pipe(take(1), takeUntil(this._destroyed$), finalize(() => { this.searchingItems = false; this.applicationRef.tick(); }))
-    .subscribe({
+  ngOnInit(): void {
+    this.searchField = this.fb.control('');
+    this.searchFieldObserver = this.searchField.valueChanges
+    .pipe(debounceTime(500), distinctUntilChanged(), switchMap(inputValue => {
+      return this.searchItems(inputValue);
+    })).subscribe({
       next: (response: SearchResults) => {
         let results = response.results;
         results.forEach((value, index, arr) => {
@@ -53,17 +53,28 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  public searchItems(query: string): Observable<SearchResults>{
+    this.emptySearchedResults();
+    this.searchingItems = true;
+    this.applicationRef.tick();
+    return this.search.search_multi(query)
+    .pipe(take(1), takeUntil(this._destroyed$), finalize(() => { 
+      this.searchingItems = false;
+      this.applicationRef.tick(); 
+    }));
+  }
+
   public openDetails(item: SearchedMovie & SearchedTVShow & SearchedPerson): void{
     this.searchInput.nativeElement.blur();
     if(item.media_type.toString() === "movie"){
       this.searchInput.nativeElement.value = `${item.title}`;
       OpenDialogComponent.execute(this.dialog, MovieDetailsComponent, item).afterClosed().subscribe(result => {
-        this.searchInput.nativeElement.value = ``;
+        this.emptySearchInput();
       });
     }else if(item.media_type.toString() === "tv"){
       this.searchInput.nativeElement.value = `${item.name}`;
       OpenDialogComponent.execute(this.dialog, SeriesDetailsComponent, item).afterClosed().subscribe(result => {
-        this.searchInput.nativeElement.value = ``;
+        this.emptySearchInput();
       });
     }else{
       this.snackBar.open("Details not available!.", "Ok", { duration: 2000 });
@@ -73,6 +84,10 @@ export class NavbarComponent implements OnInit {
 
   public emptySearchedResults(): void{
     this.items.splice(0, this.items.length);
+  }
+
+  private emptySearchInput(): void{
+    this.searchInput.nativeElement.value = ``;
   }
 
   private extractYear(date: string): number{
@@ -86,5 +101,6 @@ export class NavbarComponent implements OnInit {
   ngOnDestroy(): void {
       this._destroyed$.next(true);
       this._destroyed$.complete();
+      this.searchFieldObserver.unsubscribe();
   }
 }
