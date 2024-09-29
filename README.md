@@ -1,27 +1,20 @@
-# MyApp
+```
+             ________                           ___   ___     _______
+            /  _____/ ___                      /  /  /   \   /      /                            ___   
+         __/  /____  /__/                     /  /  /     \_/      /  ___________   ___   ___   /__/  ___________
+        /_   _____/ ___  __________   _______/  /  /   /\   /|    /  /  _____   /  /  /  /  /  ___   /  _____   /
+         /  /      /  / /  ____   /  /  ____   /  /   /  \_/ |   /  /  /    /  /  /  /  /  /  /  /  /  ________/
+        /  /      /  / /  /   /  /  /  /___/  /  /   /      /   /  /  /____/  /  /  /__/  /  /  /  /  /_______
+       /__/      /__/ /__/   /__/  /_________/  /___/      /___/  /__________/  /________/  /__/  /__________/
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.6.
+```
 
-## Development server
+# Introduction
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This site simplifies the hustle of navigating through torrent sites in the internet to find good quality torrents for your media choice. Here you can find any movie that is already in the [IMDB (International Movie Database)](https://www.imdb.com/) and obtain its torrent links directly with a push of a button. The torrent links provided here are obtained using an algorithm that filters the best torrents from multiple torrent clients. This site is made and maintained out of love for movies and tv shows that give us the best entertainment thereis.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Acknowledgements
+ - [TMDB (The Movie Database)](https://www.themoviedb.org)
+ - [OMDB (The Open Movie Database)](https://www.omdbapi.com)
+ - [RYUK-ME Torrent API](https://github.com/Ryuk-me/Torrent-Api-py)
+ - [Angular Framework](https://angular.dev/)
