@@ -50,7 +50,7 @@
   <hr/>
 
   <h3 style="letter-spacing: 0.2rem;font-weight: bold;">Plot:</h3>
-  <p>{{ data.overview }}</p>
+  <p style="text-align: justify;">{{ data.overview }}</p>
   <hr/>
 
   <h3 style="letter-spacing: 0.2rem;font-weight: bold;">Crew:</h3>
@@ -79,14 +79,18 @@
         <mat-panel-description>{{ season.air_date | formatDate: 'Full' }}</mat-panel-description>
       </mat-expansion-panel-header>
       <h3>Overview:</h3>
-      <p>{{ season.overview }}</p>
-      <p>Episodes:&nbsp;{{ season.episode_count }}</p>
-      <h3 *ngIf="!fetchingTorrents && torrentsFound && season.episode_count > 0">Torrents:</h3>
-      <div *ngIf="!fetchingTorrents && torrentsFound && season.episode_count > 0">
-        <button style="margin-right: 8px;margin-bottom: 6px;" mat-raised-button (click)="viewSeasonTorrents(season.season_number)">
+      <p style="text-align: justify;">{{ season.overview }}</p>
+      <h3>Episodes:&nbsp;{{ season.episode_count }}</h3>
+      <h3 *ngIf="season.episode_count > 0">
+        Torrents: 
+        <span *ngIf="fetchingTorrents && !loadingTorrents" style="color: green;"><em>Fetching...</em></span>
+        <span *ngIf="loadingTorrents && !fetchingTorrents" style="color: green;"><em>Loading...</em></span>
+      </h3>
+      <div *ngIf="season.episode_count > 0 && (!loadingTorrents && !fetchingTorrents)">
+        <button style="margin-right: 8px;margin-bottom: 6px;" mat-raised-button (click)="getSeasonTorrents(data.name, season.season_number)" [disabled]="fetchingTorrents || loadingTorrents || torrentsDisabled || !areAllEpisodesReleased(season.season_number, tvshow_details.next_episode_to_air)">
           Complete
         </button>
-        <button style="margin-right: 8px;margin-bottom: 6px;" mat-raised-button *ngFor="let episode of tvseasons_details[season.season_number]?.episodes; index as i; trackBy: trackByFn" (click)="viewEpisodeTorrents(season.season_number, episode.episode_number)">
+        <button style="margin-right: 8px;margin-bottom: 6px;" mat-raised-button *ngFor="let episode of tvseasons_details[season.season_number]?.episodes; index as i; trackBy: trackByFn" (click)="getEpisodeTorrents(data.name, season.season_number, episode.episode_number)" [disabled]="fetchingTorrents || loadingTorrents || torrentsDisabled || !isEpisodeReleased(season.season_number, episode.episode_number, tvshow_details.next_episode_to_air)">
           Episode&nbsp;{{ episode.episode_number }}
         </button>
       </div>
@@ -101,9 +105,4 @@
 </mat-dialog-content>
 <mat-dialog-actions *ngIf="!fetchingTVShowDetails" align="end">
   <button mat-stroked-button mat-dialog-close>Close</button>
-  <button mat-raised-button color="primary" (click)="getTorrents(data.name)" [disabled]="fetchingTorrents || loadingTorrents || torrentsDisabled" cdkFocusInitial>
-    <span class="fa fa-magnet" *ngIf="!fetchingTorrents && !loadingTorrents"> Torrents</span>
-    <span *ngIf="fetchingTorrents && !loadingTorrents">Fetching...</span>
-    <span *ngIf="loadingTorrents && !fetchingTorrents">Loading...</span>
-  </button>
 </mat-dialog-actions>

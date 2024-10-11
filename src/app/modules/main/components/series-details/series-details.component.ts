@@ -26,7 +26,6 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
   public loadingTorrents: boolean = false;
   public torrents: Array<Torrent> = new Array();
   public torrentsDisabled: boolean = true;
-  public torrentsFound: boolean = false;
   public tvshow_details: SeriesDetails = new SeriesDetails();
   public tvseasons_details: Array<Season> = new Array();
   public OMDB_details: OMDB = new OMDB();
@@ -75,7 +74,7 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getTorrents(title: string): void{
+  public getTorrents(title: string, type: string, season_number: number, episode_number: number = 0): void{
     this.torrents.splice(0, this.torrents.length);
     let torrentsAvailableInCache = this.torrentClient.isTorrentResponseSaved(title);
     this.fetchingTorrents = true;
@@ -90,26 +89,29 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
           results.data.forEach((value, index, array) => {
             this.torrents.push(value);
           });
-          const regex = this.generateTVTorrentRegExp(title);
-          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.name.toString()));
+          // Filter Torrents Here
+          this.torrents = this.filterTorrentsByTitle(title);
+          if(type == "season") this.torrents = this.filterTorrentsBySeason(season_number);
+          if(type == "episode") this.torrents = this.filterTorrentsByEpisode(season_number, episode_number);
+          this.torrents = this.torrents.sort((a, b) => parseInt((b.seeders).replace(/,/g, '')) - parseInt((a.seeders).replace(/,/g, '')));
+          this.torrents = this.torrents.slice(0, 60);
           this.loadingTorrents = false;
           if(this.torrents.length < 1){
-            this.accordion.closeAll();
-            this.torrentsFound = false;
             this.torrentClient.clearTorrentResponse(title);
             this.snackBar.open("Torrents not found!!!.", "Retry", { duration: 3000 }).onAction().subscribe({
-              next: () => { this.getTorrents(title); }
+              next: () => { this.getTorrents(title, type, season_number, episode_number); }
             });
           }else{
-            this.torrentsFound = true;
-            this.accordion.openAll();
-            ScrollGovernor.scrollToBottom(this.seasonsScrollContainer);
-            if(torrentsAvailableInCache){
-              this.snackBar.open("Retrieved Saved Torrents!", "Reload", { duration: 3000 }).onAction().subscribe(results => {
-                this.torrentClient.clearTorrentResponse(title);
-                this.getTorrents(title);
-              });
-            }
+            let bottomsheetRef = this.openTorrents(this.torrents);
+            bottomsheetRef.afterOpened().subscribe(result => {
+              if(torrentsAvailableInCache){
+                this.snackBar.open("Retrieved Saved Torrents!", "Reload", { duration: 3000 }).onAction().subscribe(results => {
+                  this.torrentClient.clearTorrentResponse(title);
+                  this.getTorrents(title, type, season_number, episode_number);
+                });
+              }
+            });
+            bottomsheetRef.afterDismissed().subscribe(response => this.bottomSheetDismissHandler(response))
           }
         }else{
           this.snackBar.open(results, "", { duration: 3000 });
@@ -121,62 +123,73 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createSearchIndex(title: string, season_number: number, episode_number: number): string{
-    return ``;
+  public getSeasonTorrents(title: string, season_number: number): void{
+    let sanitizedTitle = this.generateSearchQuery(title);
+    sanitizedTitle = `${sanitizedTitle}.${this.createSeasonIndex(season_number)}`;
+    this.getTorrents(sanitizedTitle, "season", season_number);
   }
 
-  public viewSeasonTorrents(season_number: number): void{
+  public getEpisodeTorrents(title: string, season_number: number, episode_number: number): void{
+    let sanitizedTitle = this.generateSearchQuery(title);
+    sanitizedTitle = `${sanitizedTitle}.${this.createEpisodeIndex(season_number, episode_number)}`;
+    this.getTorrents(sanitizedTitle, "episode", season_number, episode_number);
+  }
+
+  private filterTorrentsBySeason(season_number: number): Array<Torrent>{
     let index1 = this.createSeasonIndex(season_number);
     let index2 = `Season ${season_number}`;
     let regExp1 = new RegExp(`[\\s|\\.]${index1}[\\s|\\.]`, 'i');
     let regExp2 = new RegExp(`[\\s|\\.]${index2}[\\s|\\.]`, 'i');
-    let seasons = this.torrents.filter((value, index, arr) => (regExp1.test(value.name.toString()) || regExp2.test(value.name.toString())));
-    seasons = seasons.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
-    if(seasons.length > 0){
-      this.openTorrents(seasons).afterDismissed().subscribe(response => this.bottomSheetDismissHandler(response));
-    }else{
-      this.snackBar.open("Torrents not available!!!.", "Ok");
-    }
+    return this.torrents.filter((value, index, arr) => (regExp1.test(value.name.toString()) || regExp2.test(value.name.toString())));
   }
 
-  public viewEpisodeTorrents(season_number: number, episode_number: number): void{
+  private filterTorrentsByEpisode(season_number: number, episode_number: number): Array<Torrent>{
     let index = this.createEpisodeIndex(season_number, episode_number);
     let regExp = new RegExp(`[\\s|\\.]${index}[\\s|\\.]`, 'i');
-    let episodes = this.torrents.filter((value, index, arr) => regExp.test(value.name.toString()));
-    episodes = episodes.sort((a, b) => parseInt(b.seeders) - parseInt(a.seeders));
-    if(episodes.length > 0){
-      this.openTorrents(episodes).afterDismissed().subscribe(response => this.bottomSheetDismissHandler(response));
-    }else{
-      this.snackBar.open("Torrents not available!!!.", "Ok");
-    }
+    return this.torrents.filter((value, index, arr) => regExp.test(value.name.toString()));
   }
 
-  public createSeasonIndex(season_number: number): string{
-    let index = '';
-    (season_number > 9) ? index = `S${season_number}` : index = `S0${season_number}`;
+  private filterTorrentsByTitle(title: string): Array<Torrent>{
+    var sanitizedTitle = this.sanitizeSearchQuery(title);
+    var sanitizedTitleArr = sanitizedTitle.split(' ');
+    var sanitizedTitleSize = sanitizedTitleArr.length;
+    var titleExpression = (sanitizedTitleSize > 1) ? sanitizedTitleArr.join('[\\s|\\.|\\-]') : sanitizedTitle;
+    var titleRegex = new RegExp(`^${titleExpression}`, 'i');
+    return this.torrents.filter((torrent, index, torrents) => titleRegex.test(torrent.name.toString()));
+  }
+
+  private generateSearchQuery(title: string): string{
+    var sanitizedSearchQuery = this.sanitizeSearchQuery(title);
+    var searchQueryArr = sanitizedSearchQuery.split(' ');
+    var searchQueryArrSize = searchQueryArr.length;
+    var searchQuery = (searchQueryArrSize > 1) ? searchQueryArr.join('.') : sanitizedSearchQuery;
+    return searchQuery;
+  }
+
+  private sanitizeSearchQuery(query: string): string{
+    query = query.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_'{|}~]/g, " ");
+    return query.replace(/\s{2,}/g, " ");
+  }
+
+  private createSeasonIndex(season_number: number): string{
+    var index = (season_number > 9) ? `S${season_number}` : `S0${season_number}`;
     return `${index}`;
   }
 
   public createEpisodeIndex(season_number: number, episode_number: number): string{
-    let index = '';
-    index = this.createSeasonIndex(season_number);
-    (episode_number > 9) ? index = `${index}E${episode_number}` : index = `${index}E0${episode_number}`;
+    let index = this.createSeasonIndex(season_number);
+    index = (episode_number > 9) ? `${index}E${episode_number}` : `${index}E0${episode_number}`;
     return `${index}`;
   }
 
-  private generateTVTorrentRegExp(needle: string): RegExp{
-    needle = needle.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_'{|}~]/g, " ");
-    needle = needle.replace(/\s{2,}/g, " ");
-    var needleArr = needle.split(' ');
-    var needleSize = needleArr.length;
-    var expression = '';
-    if (needleSize > 1) {
-      expression = needleArr.join('[\\s|\\.|\\-]');
-    }else{
-      expression = needle;
-    }
-    // return new RegExp(`^${expression}`, 'im');
-    return new RegExp(`^${expression}`, 'i');
+  public isEpisodeReleased(current_season: number, current_episode: number, next_episode_To_air: Episode): boolean{
+    if(next_episode_To_air == null) return true;
+    return (current_season == next_episode_To_air.season_number && current_episode >= next_episode_To_air.episode_number) ? false : true;
+  }
+
+  public areAllEpisodesReleased(current_season: number, next_episode_To_air: Episode): boolean{
+    if(next_episode_To_air == null) return true;
+    return (current_season == next_episode_To_air.season_number) ? false : true;
   }
 
   private processTVSeasonVideos(videos: Videos): void{
