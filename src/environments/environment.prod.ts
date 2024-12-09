@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  version: '1.2.11',
+  version: '1.2.13',
   copyright: '2021-24',
   github: 'https://github.com/MASHINJIGODFREY',
   api: {
