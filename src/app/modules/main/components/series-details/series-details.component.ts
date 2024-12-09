@@ -28,6 +28,7 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
   public torrentsDisabled: boolean = true;
   public tvshow_details: SeriesDetails = new SeriesDetails();
   public tvseasons_details: Array<Season> = new Array();
+  private allowed_tvshow_status_options: Array<string> = ["Returning Series", "Ended", "Canceled"];
   public OMDB_details: OMDB = new OMDB();
   public season_trailer_URL: string = "";
   public seasonTrailerFound: boolean = false;
@@ -50,7 +51,7 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
         if(this.tvshow_details.seasons.some((season, index, arr) => season.season_number === 0)) this.tvshow_details.seasons.splice(0,1);
         this.OMDB_details = response[1];
         this.tvseasons_details = new Array<Season>(this.tvshow_details.number_of_seasons);
-        (response[0].status.toString() === "Returning Series" || response[0].status.toString() === "Ended") ? this.torrentsDisabled = false : this.torrentsDisabled = true;
+        this.torrentsDisabled = (this.allowed_tvshow_status_options.includes(this.tvshow_details.status.toString())) ? false : true;
       },
       error: (error: any) => {
         this.snackBar.open(error.message, "Ok", { duration: 2000 });
