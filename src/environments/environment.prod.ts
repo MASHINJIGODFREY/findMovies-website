@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   version: '1.2.13',
   copyright: '2021-24',
-  github: 'https://github.com/MASHINJIGODFREY',
+  github: 'https://github.com/benedictgodfreym',
   api: {
     tmdb: {
       url: `https://api.themoviedb.org/3`,
