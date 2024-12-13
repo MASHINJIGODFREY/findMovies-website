@@ -156,7 +156,7 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
     var sanitizedTitleSize = sanitizedTitleArr.length;
     var titleExpression = (sanitizedTitleSize > 1) ? sanitizedTitleArr.join('[\\s|\\.|\\-]') : sanitizedTitle;
     var titleRegex = new RegExp(`^${titleExpression}`, 'i');
-    return this.torrents.filter((torrent, index, torrents) => titleRegex.test(torrent.name.toString()));
+    return this.torrents.filter((torrent, index, torrents) => titleRegex.test(torrent.name?.toString()));
   }
 
   private generateSearchQuery(title: string): string{

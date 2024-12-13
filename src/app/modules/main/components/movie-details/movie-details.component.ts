@@ -68,7 +68,7 @@ export class MovieDetailsComponent implements OnInit, OnDestroy {
             this.torrents.push(value);
           });
           const regex = this.generateMovieTorrentRegExp(title, this.data.release_date);
-          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.name.toString()));
+          this.torrents = this.torrents.filter((torrent, index, torrents) => regex.test(torrent.name?.toString()));
           this.torrents = this.torrents.sort((a, b) => parseInt((b.seeders).replace(/,/g, '')) - parseInt((a.seeders).replace(/,/g, '')));
           this.torrents = this.torrents.slice(0, 40);
           this.loadingTorrents = false;
