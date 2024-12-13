@@ -141,13 +141,13 @@ export class SeriesDetailsComponent implements OnInit, OnDestroy {
     let index2 = `Season ${season_number}`;
     let regExp1 = new RegExp(`[\\s|\\.]${index1}[\\s|\\.]`, 'i');
     let regExp2 = new RegExp(`[\\s|\\.]${index2}[\\s|\\.]`, 'i');
-    return this.torrents.filter((value, index, arr) => (regExp1.test(value.name.toString()) || regExp2.test(value.name.toString())));
+    return this.torrents.filter((value, index, arr) => (regExp1.test(value.name?.toString()) || regExp2.test(value.name?.toString())));
   }
 
   private filterTorrentsByEpisode(season_number: number, episode_number: number): Array<Torrent>{
     let index = this.createEpisodeIndex(season_number, episode_number);
     let regExp = new RegExp(`[\\s|\\.]${index}[\\s|\\.]`, 'i');
-    return this.torrents.filter((value, index, arr) => regExp.test(value.name.toString()));
+    return this.torrents.filter((value, index, arr) => regExp.test(value.name?.toString()));
   }
 
   private filterTorrentsByTitle(title: string): Array<Torrent>{
