@@ -14,7 +14,8 @@
 This site simplifies the hustle of navigating through torrent sites in the internet to find good quality torrents for your media choice. Here you can find any movie that is already in the [IMDB (International Movie Database)](https://www.imdb.com/) and obtain its torrent links directly with a push of a button. The torrent links provided here are obtained using an algorithm that filters the best torrents from multiple torrent clients. This site is made and maintained out of love for movies and tv shows that give us the best entertainment thereis.
 
 ## Acknowledgements
- - [TMDB (The Movie Database)](https://www.themoviedb.org)
- - [OMDB (The Open Movie Database)](https://www.omdbapi.com)
- - [RYUK-ME Torrent API](https://github.com/Ryuk-me/Torrent-Api-py)
  - [Angular Framework](https://angular.dev/)
+ - [LightSlider Plugin by Sachin Neravath](https://github.com/sachinchoolur/lightslider)
+ - [OMDB (The Open Movie Database)](https://www.omdbapi.com)
+ - [TMDB (The Movie Database)](https://www.themoviedb.org)
+ - [Torrent API by Neeraj Kumar](https://github.com/Ryuk-me/Torrent-Api-py)
