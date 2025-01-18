@@ -1,11 +1,11 @@
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Movie, MovieDetails, OMDB, Torrent, Torrents, Tuhinpal, Videos } from 'src/app/models';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { ImgService, MovieService, OmdbService, TorrentService, TuhinpalService } from 'src/app/services';
 import { catchError, finalize, switchMap, takeUntil, timeout } from 'rxjs/operators';
 import { combineLatest, of, Subject } from 'rxjs';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { fadeIn } from 'src/app/animations';
 import { TorrentsComponent } from '../torrents/torrents.component';
 

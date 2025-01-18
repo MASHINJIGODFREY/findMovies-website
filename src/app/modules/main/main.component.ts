@@ -1,5 +1,5 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { Subject, takeUntil } from 'rxjs';
 import { fadeIn } from 'src/app/animations';

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { fadeIn } from 'src/app/animations';
 import { OpenDialogComponent } from 'src/app/factories/dialog-opener';

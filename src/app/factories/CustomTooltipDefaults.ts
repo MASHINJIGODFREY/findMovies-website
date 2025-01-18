@@ -1,4 +1,4 @@
-import { MatLegacyTooltipDefaultOptions as MatTooltipDefaultOptions } from "@angular/material/legacy-tooltip";
+import { MatTooltipDefaultOptions } from "@angular/material/tooltip";
 
 export const CustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 2000,
