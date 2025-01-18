@@ -22,7 +22,7 @@
     "@angular/router": "^19.1.1",
     "@ngneat/cashew": "^4.1.0",
     "ng-lazyload-image": "^9.1.3",
-    "ngx-clipboard": "^15.1.0",
+    "ngx-clipboard": "^16.0.0",
     "ngx-skeleton-loader": "^6.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
