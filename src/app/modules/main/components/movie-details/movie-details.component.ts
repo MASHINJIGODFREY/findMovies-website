@@ -10,11 +10,12 @@ import { fadeIn } from 'src/app/animations';
 import { TorrentsComponent } from '../torrents/torrents.component';
 
 @Component({
-  selector: 'app-movie-details',
-  animations: [fadeIn],
-  host: { '[@fadeInAnimation]': '' },
-  templateUrl: './movie-details.component.html',
-  styleUrls: ['./movie-details.component.css']
+    selector: 'app-movie-details',
+    animations: [fadeIn],
+    host: { '[@fadeInAnimation]': '' },
+    templateUrl: './movie-details.component.html',
+    styleUrls: ['./movie-details.component.css'],
+    standalone: false
 })
 export class MovieDetailsComponent implements OnInit, OnDestroy {
   private _destroyed$: Subject<boolean> = new Subject();

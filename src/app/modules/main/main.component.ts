@@ -5,11 +5,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { fadeIn } from 'src/app/animations';
 
 @Component({
-  selector: 'app-main',
-  animations: [fadeIn],
-  host: { '[@fadeInAnimation]': '' },
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+    selector: 'app-main',
+    animations: [fadeIn],
+    host: { '[@fadeInAnimation]': '' },
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.css'],
+    standalone: false
 })
 export class MainComponent implements OnInit {
   private _destroyed$: Subject<boolean> = new Subject();

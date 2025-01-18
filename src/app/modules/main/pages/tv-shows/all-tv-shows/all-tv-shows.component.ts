@@ -10,10 +10,11 @@ import { ImgService, SeriesService, UiService } from 'src/app/services';
 import { SeriesDetailsComponent } from '../../../components';
 
 @Component({
-  animations: [fadeIn],
-  host: { '[@fadeInAnimation]': '' },
-  templateUrl: './all-tv-shows.component.html',
-  styleUrls: ['./all-tv-shows.component.css']
+    animations: [fadeIn],
+    host: { '[@fadeInAnimation]': '' },
+    templateUrl: './all-tv-shows.component.html',
+    styleUrls: ['./all-tv-shows.component.css'],
+    standalone: false
 })
 export class AllTvShowsComponent implements OnInit, OnDestroy {
   private _destroyed$: Subject<boolean> = new Subject();

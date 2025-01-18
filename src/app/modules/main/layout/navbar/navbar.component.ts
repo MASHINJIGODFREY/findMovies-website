@@ -9,9 +9,10 @@ import { MovieDetailsComponent, SeriesDetailsComponent } from '../../components'
 import { FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.css'],
+    standalone: false
 })
 export class NavbarComponent implements OnInit {
   private _destroyed$: Subject<boolean> = new Subject();

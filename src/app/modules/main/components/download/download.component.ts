@@ -6,9 +6,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 declare var WebTorrent: WebTorrent;
 
 @Component({
-  selector: 'app-download',
-  templateUrl: './download.component.html',
-  styleUrls: ['./download.component.css']
+    selector: 'app-download',
+    templateUrl: './download.component.html',
+    styleUrls: ['./download.component.css'],
+    standalone: false
 })
 export class DownloadComponent implements OnInit {
   public loading: boolean = true;

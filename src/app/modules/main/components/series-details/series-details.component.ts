@@ -12,11 +12,12 @@ import { ImgService, OmdbService, SeriesService, TorrentService, TuhinpalService
 import { TorrentsComponent } from '../torrents/torrents.component';
 
 @Component({
-  selector: 'app-series-details',
-  animations: [fadeIn],
-  host: { '[@fadeInAnimation]': '' },
-  templateUrl: './series-details.component.html',
-  styleUrls: ['./series-details.component.css']
+    selector: 'app-series-details',
+    animations: [fadeIn],
+    host: { '[@fadeInAnimation]': '' },
+    templateUrl: './series-details.component.html',
+    styleUrls: ['./series-details.component.css'],
+    standalone: false
 })
 export class SeriesDetailsComponent implements OnInit, OnDestroy {
   private _destroyed$: Subject<boolean> = new Subject();

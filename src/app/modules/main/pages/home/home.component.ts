@@ -10,10 +10,11 @@ import { ImgService, MovieService, SeriesService, UiService } from 'src/app/serv
 import { MovieDetailsComponent, SeriesDetailsComponent } from '../../components';
 
 @Component({
-  animations: [fadeIn],
-  host: { '[@fadeInAnimation]': '' },
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+    animations: [fadeIn],
+    host: { '[@fadeInAnimation]': '' },
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
+    standalone: false
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private _destroyed$: Subject<boolean> = new Subject();

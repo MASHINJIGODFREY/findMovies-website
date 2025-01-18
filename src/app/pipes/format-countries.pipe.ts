@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Country } from '../models';
 
 @Pipe({
-  name: 'formatCountries'
+    name: 'formatCountries',
+    standalone: false
 })
 export class FormatCountriesPipe implements PipeTransform {
 

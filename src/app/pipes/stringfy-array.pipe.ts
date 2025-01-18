@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'stringfyArray'
+    name: 'stringfyArray',
+    standalone: false
 })
 export class StringfyArrayPipe implements PipeTransform {
 

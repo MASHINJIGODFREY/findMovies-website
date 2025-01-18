@@ -5,9 +5,10 @@ import { SanitizedError } from 'src/app/factories/SanitizedError';
 export const ERROR_INJECTOR_TOKEN: InjectionToken<any> = new InjectionToken('ErrorInjectionToken');
 
 @Component({
-  selector: 'app-error-handling',
-  templateUrl: './error-handling.component.html',
-  styleUrls: ['./error-handling.component.css']
+    selector: 'app-error-handling',
+    templateUrl: './error-handling.component.html',
+    styleUrls: ['./error-handling.component.css'],
+    standalone: false
 })
 export class ErrorHandlingComponent implements OnInit {
   private isVisible = new Subject<{}>();

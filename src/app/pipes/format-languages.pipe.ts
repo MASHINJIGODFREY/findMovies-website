@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Language } from '../models';
 
 @Pipe({
-  name: 'formatLanguages'
+    name: 'formatLanguages',
+    standalone: false
 })
 export class FormatLanguagesPipe implements PipeTransform {
 

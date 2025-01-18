@@ -9,9 +9,10 @@ import { UiService } from 'src/app/services';
 import { DownloadComponent } from '../download/download.component';
 
 @Component({
-  selector: 'app-torrents',
-  templateUrl: './torrents.component.html',
-  styleUrls: ['./torrents.component.css']
+    selector: 'app-torrents',
+    templateUrl: './torrents.component.html',
+    styleUrls: ['./torrents.component.css'],
+    standalone: false
 })
 export class TorrentsComponent implements OnInit, OnDestroy {
   public torrents: Array<{ release_format_type: string; files: Array<Torrent>; quality: string; enphasis: string; }> = new Array();
