@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ClipboardService } from 'ngx-clipboard';
 import { OpenDialogComponent } from 'src/app/factories/dialog-opener';
 import { Torrent } from 'src/app/models';

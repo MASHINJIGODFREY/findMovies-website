@@ -1,6 +1,6 @@
 import { ApplicationRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { debounceTime, distinctUntilChanged, finalize, Observable, Subject, Subscription, switchMap, take, takeUntil } from 'rxjs';
 import { OpenDialogComponent } from 'src/app/factories/dialog-opener';
 import { SearchedMovie, SearchedPerson, SearchedTVShow, SearchResults } from 'src/app/models';
