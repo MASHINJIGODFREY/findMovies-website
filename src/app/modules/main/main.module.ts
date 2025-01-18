@@ -14,62 +14,56 @@ import { IfNotDirective } from 'src/app/directives';
 import { DownloadComponent, LoadingSpinnerComponent, MovieDetailsComponent, SeriesDetailsComponent, TorrentsComponent } from './components';
 import { ClipboardModule } from 'ngx-clipboard';
 import { HttpCacheInterceptorModule } from '@ngneat/cashew';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MaterialModule } from '../shared/material.module';
 import { ImgService, MovieService, NavigationService, OmdbService, SearchService, SeriesService, TorrentService, TuhinpalService, UiService } from 'src/app/services';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
-@NgModule({
-  declarations: [
-    AboutComponent,
-    AllMoviesComponent,
-    AllTvShowsComponent,
-    DownloadComponent,
-    DurationPipe,
-    FooterComponent,
-    FormatCountriesPipe,
-    FormatDatePipe,
-    FormatGenrePipe,
-    FormatLanguagesPipe,
-    HomeComponent,
-    IfNotDirective,
-    LoadingSpinnerComponent,
-    MainComponent,
-    MoviesComponent,
-    MovieDetailsComponent,
-    NavbarComponent,
-    SafePipe,
-    SeriesDetailsComponent,
-    StringfyArrayPipe,
-    TopRatedMoviesComponent,
-    TopRatedTvShowsComponent,
-    TorrentsComponent,
-    TvShowsComponent,
-    UpcomingMoviesComponent,
-  ],
-  imports: [
-    CommonModule,
-    ClipboardModule,
-    HttpCacheInterceptorModule.forRoot({ strategy: 'explicit', ttl: 604800000 }),
-    HttpClientModule,
-    LazyLoadImageModule,
-    MainRoutingModule,
-    MaterialModule,
-    NgxSkeletonLoaderModule,
-    ReactiveFormsModule
-  ],
-  providers: [
-    ImgService,
-    MovieService,
-    NavigationService,
-    OmdbService,
-    SearchService,
-    SeriesService,
-    TorrentService,
-    TuhinpalService,
-    UiService
-  ]
-})
+@NgModule({ declarations: [
+        AboutComponent,
+        AllMoviesComponent,
+        AllTvShowsComponent,
+        DownloadComponent,
+        DurationPipe,
+        FooterComponent,
+        FormatCountriesPipe,
+        FormatDatePipe,
+        FormatGenrePipe,
+        FormatLanguagesPipe,
+        HomeComponent,
+        IfNotDirective,
+        LoadingSpinnerComponent,
+        MainComponent,
+        MoviesComponent,
+        MovieDetailsComponent,
+        NavbarComponent,
+        SafePipe,
+        SeriesDetailsComponent,
+        StringfyArrayPipe,
+        TopRatedMoviesComponent,
+        TopRatedTvShowsComponent,
+        TorrentsComponent,
+        TvShowsComponent,
+        UpcomingMoviesComponent,
+    ], imports: [CommonModule,
+        ClipboardModule,
+        HttpCacheInterceptorModule.forRoot({ strategy: 'explicit', ttl: 604800000 }),
+        LazyLoadImageModule,
+        MainRoutingModule,
+        MaterialModule,
+        NgxSkeletonLoaderModule,
+        ReactiveFormsModule], providers: [
+        ImgService,
+        MovieService,
+        NavigationService,
+        OmdbService,
+        SearchService,
+        SeriesService,
+        TorrentService,
+        TuhinpalService,
+        UiService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class MainModule { }
