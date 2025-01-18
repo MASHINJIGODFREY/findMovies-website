@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
   version: '1.2.13',
-  copyright: '2021-24',
-  github: 'https://github.com/benedictgodfreym',
+  copyright: '2021-25',
+  github: 'https://github.com/BenedictGodfreyM/findMovies',
   api: {
     tmdb: {
       url: `https://api.themoviedb.org/3`,

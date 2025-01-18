@@ -15,9 +15,6 @@ import { ErrorHandlingService } from 'src/app/services';
     CommonModule,
     OverlayModule,
     A11yModule
-  ],
-  entryComponents: [
-    ErrorHandlingComponent
   ]
 })
 export class ErrorHandlingModule {

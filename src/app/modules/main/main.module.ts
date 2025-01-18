@@ -13,8 +13,8 @@ import { FooterComponent, NavbarComponent } from './layout';
 import { IfNotDirective } from 'src/app/directives';
 import { DownloadComponent, LoadingSpinnerComponent, MovieDetailsComponent, SeriesDetailsComponent, TorrentsComponent } from './components';
 import { ClipboardModule } from 'ngx-clipboard';
-import { HttpCacheInterceptorModule } from '@ngneat/cashew';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpCache, withHttpCacheInterceptor } from '@ngneat/cashew';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MaterialModule } from '../shared/material.module';
 import { ImgService, MovieService, NavigationService, OmdbService, SearchService, SeriesService, TorrentService, TuhinpalService, UiService } from 'src/app/services';
@@ -49,7 +49,6 @@ import { ReactiveFormsModule } from '@angular/forms';
         UpcomingMoviesComponent,
     ], imports: [CommonModule,
         ClipboardModule,
-        HttpCacheInterceptorModule.forRoot({ strategy: 'explicit', ttl: 604800000 }),
         LazyLoadImageModule,
         MainRoutingModule,
         MaterialModule,
@@ -64,6 +63,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         TorrentService,
         TuhinpalService,
         UiService,
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptors([withHttpCacheInterceptor()]),withInterceptorsFromDi()),
+        provideHttpCache({ strategy: 'explicit', ttl: 604800000 })
     ] })
 export class MainModule { }
