@@ -12,7 +12,6 @@ export class HeadersInterceptor implements HttpInterceptor {
     request = request.clone({
       headers: new HttpHeaders({
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
       })
     });
 
