@@ -11,8 +11,6 @@ export class HeadersInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     request = request.clone({
       headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Accept, Content-Type, Origin',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       })
